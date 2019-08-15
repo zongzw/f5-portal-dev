@@ -10,14 +10,11 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from django.utils.translation import ugettext_lazy as _
+from django.conf.urls import url
 
-import horizon
-from openstack_dashboard.dashboards.f5services import dashboard
-
-class F5adc(horizon.Panel):
-    name = _("ADC")
-    slug = "f5adc"
+from openstack_dashboard.dashboards.f5services.f5ltm import views
 
 
-dashboard.F5services.register(F5adc)
+urlpatterns = [
+    url(r'^$', views.IndexView.as_view(), name='index'),
+]

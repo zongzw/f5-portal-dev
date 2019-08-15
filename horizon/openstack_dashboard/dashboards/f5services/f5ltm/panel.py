@@ -15,9 +15,9 @@ from django.utils.translation import ugettext_lazy as _
 import horizon
 from openstack_dashboard.dashboards.f5services import dashboard
 
-class F5adc(horizon.Panel):
-    name = _("ADC")
-    slug = "f5adc"
+class F5ltm(horizon.Panel):
+    name = _("LTMaaS")
+    slug = "f5ltm"
 
 
-dashboard.F5services.register(F5adc)
+dashboard.F5services.register(F5ltm)

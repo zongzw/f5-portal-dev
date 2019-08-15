@@ -14,16 +14,20 @@ from django.utils.translation import ugettext_lazy as _
 
 import horizon
 
+class ServiceMgmt(horizon.PanelGroup):
+    slug = "aasgroup"
+    name = _("Service Management")
+    panels = ('f5ltm', 'f5waf', 'f5dns',)
 
-class Mygroup(horizon.PanelGroup):
-    slug = "mygroup"
-    name = _("My Group")
+class DeviceMgmt(horizon.PanelGroup):
+    slug = "devices"
+    name = _("Device Management")
     panels = ('f5adc',)
 
 class F5services(horizon.Dashboard):
-    name = _("F5services")
+    name = _("F5 ADCaaS Dashboard")
     slug = "f5services"
-    panels = ('f5adc', )  # Add your panels here.
+    panels = (DeviceMgmt, ServiceMgmt,)  # Add your panels here.
     default_panel = 'f5adc'  # Specify the slug of the dashboard's default panel.
 
 

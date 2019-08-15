@@ -10,14 +10,10 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from django.utils.translation import ugettext_lazy as _
-
-import horizon
-from openstack_dashboard.dashboards.f5services import dashboard
-
-class F5adc(horizon.Panel):
-    name = _("ADC")
-    slug = "f5adc"
+from horizon.test import helpers as test
 
 
-dashboard.F5services.register(F5adc)
+class F5wafTests(test.TestCase):
+    # Unit tests for f5waf.
+    def test_me(self):
+        self.assertTrue(1 + 1 == 2)
