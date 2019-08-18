@@ -5,5 +5,7 @@ PANEL_DASHBOARD = 'identity'
 # The slug of the panel group the PANEL is associated with.
 PANEL_GROUP = 'default'
 
+DEFAULT_PANEL = 'groups'
+
 # Python panel class of the PANEL to be added.
 ADD_PANEL = 'openstack_dashboard.dashboards.identity.groups.panel.Groups'
