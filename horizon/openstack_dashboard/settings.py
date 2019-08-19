@@ -45,10 +45,9 @@ BIN_DIR = os.path.abspath(os.path.join(ROOT_PATH, '..', 'bin'))
 if ROOT_PATH not in sys.path:
     sys.path.append(ROOT_PATH)
 
-DEBUG = True
+DEBUG = False
 
-SITE_BRANDING = 'F5Networks Service Dashboard'
-#SITE_BRANDING = 'OpenStack Dashboard'
+SITE_BRANDING = 'OpenStack Dashboard'
 
 WEBROOT = '/'
 LOGIN_URL = None
@@ -300,16 +299,16 @@ SECURITY_GROUP_RULES = {
 
 ADD_INSTALLED_APPS = []
 
-# USER_MENU_LINKS = [
-#     {'name': _('OpenStack RC File v2'),
-#      'icon_classes': ['fa-download', ],
-#      'url': 'horizon:project:api_access:openrcv2'
-#      },
-#     {'name': _('OpenStack RC File v3'),
-#      'icon_classes': ['fa-download', ],
-#      'url': 'horizon:project:api_access:openrc'
-#      }
-# ]
+USER_MENU_LINKS = [
+    {'name': _('OpenStack RC File v2'),
+     'icon_classes': ['fa-download', ],
+     'url': 'horizon:project:api_access:openrcv2'
+     },
+    {'name': _('OpenStack RC File v3'),
+     'icon_classes': ['fa-download', ],
+     'url': 'horizon:project:api_access:openrc'
+     }
+]
 
 # Deprecated Theme Settings
 CUSTOM_THEME_PATH = None
