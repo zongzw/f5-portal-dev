@@ -53,13 +53,61 @@
           formName: 'launchInstanceFlavorForm'
         },
         {
-          id: 'networks',
-          title: gettext('Networks'),
-          templateUrl: basePath + 'network/network.html',
+          id: 'mgmtnetworks',
+          title: gettext('Networks - mgmt'),
+          templateUrl: basePath + 'network/network.mgmt.html',
           helpUrl: basePath + 'network/network.help.html',
-          formName: 'launchInstanceNetworkForm',
+          formName: 'launchInstanceMgmtNetworkForm',
           requiredServiceTypes: ['network']
         },
+        {
+          id: 'extnetworks',
+          title: gettext('Networks - ext'),
+          templateUrl: basePath + 'network/network.ext.html',
+          helpUrl: basePath + 'network/network.help.html',
+          formName: 'launchInstanceExtNetworkForm',
+          requiredServiceTypes: ['network']
+        },
+        {
+          id: 'intnetworks',
+          title: gettext('Networks - int'),
+          templateUrl: basePath + 'network/network.int.html',
+          helpUrl: basePath + 'network/network.help.html',
+          formName: 'launchInstanceIntNetworkForm',
+          requiredServiceTypes: ['network']
+        },
+        {
+          id: 'hanetworks',
+          title: gettext('Networks - HA'),
+          templateUrl: basePath + 'network/network.ha.html',
+          helpUrl: basePath + 'network/network.help.html',
+          formName: 'launchInstanceHANetworkForm',
+          requiredServiceTypes: ['network']
+        },
+        // {
+        //   id: 'networks',
+        //   title: gettext('Networks'),
+        //   templateUrl: basePath + 'network/network.html',
+        //   helpUrl: basePath + 'network/network.help.html',
+        //   formName: 'launchInstanceNetworkForm',
+        //   requiredServiceTypes: ['network']
+        // },
+        // {
+        //   id: 'networks',
+        //   title: gettext('Networks - int'),
+        //   templateUrl: basePath + 'network/network.html',
+        //   helpUrl: basePath + 'network/network.help.html',
+        //   formName: 'launchInstanceNetworkForm',
+        //   requiredServiceTypes: ['network']
+        // },
+        // {
+        //   id: 'networks',
+        //   title: gettext('Networks - ha'),
+        //   templateUrl: basePath + 'network/network.html',
+        //   helpUrl: basePath + 'network/network.help.html',
+        //   formName: 'launchInstanceNetworkForm',
+        //   requiredServiceTypes: ['network']
+        // },
         // {
         //   id: 'ports',
         //   title: gettext('Network Ports'),

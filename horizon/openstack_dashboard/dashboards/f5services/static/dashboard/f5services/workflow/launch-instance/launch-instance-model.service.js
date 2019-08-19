@@ -193,6 +193,12 @@
         // REQUIRED
         name: null,
         networks: [],
+        networksMap: {
+          mgmt: [],
+          ext: [],
+          int: [],
+          ha: [],
+        },
         ports: [],
         scheduler_hints: {},
         // REQUIRED Server Key. May be empty.
@@ -323,7 +329,11 @@
       setFinalSpecSchedulerHints(finalSpec);
       setFinalSpecMetadata(finalSpec);
 
-      return novaAPI.createServer(finalSpec).then(successMessage);
+      window.alert(JSON.stringify(finalSpec));
+      console.log(JSON.stringify(finalSpec));
+
+      return successMessage; 
+      // return novaAPI.createServer(finalSpec).then(successMessage);
     }
 
     function successMessage() {
@@ -379,7 +389,10 @@
 
     function onGetFlavors(data) {
       model.flavors.length = 0;
-      push.apply(model.flavors, data.data.items);
+      var fdata = data.data.items.filter(function(v){
+        return (v.vcpus >= 4 && v.ram >= 8192);
+      });
+      push.apply(model.flavors, fdata);
     }
 
     function setFinalSpecFlavor(finalSpec) {
@@ -481,6 +494,7 @@
         }));
       if (model.networks.length === 1) {
         model.newInstanceSpec.networks.push(model.networks[0]);
+        model.newInstanceSpec.networksMap['mgmt'] = model.networks[0];
       }
       return data;
     }
@@ -652,8 +666,12 @@
     function onGetImages(data) {
       model.images.length = 0;
       push.apply(model.images, data.data.items.filter(function (image) {
+        // return isBootableImageType(image) &&
+        //   (!image.properties || image.properties.image_type !== 'snapshot');
+        var bigipPrefix = image.name.toLowerCase();
         return isBootableImageType(image) &&
-          (!image.properties || image.properties.image_type !== 'snapshot');
+          (!image.properties || image.properties.image_type !== 'snapshot') && 
+          (bigipPrefix.startsWith('bigip') || bigipPrefix.startsWith('big-ip'));
       }));
       addAllowedBootSource(model.images, bootSourceTypes.IMAGE, gettext('Image'));
     }

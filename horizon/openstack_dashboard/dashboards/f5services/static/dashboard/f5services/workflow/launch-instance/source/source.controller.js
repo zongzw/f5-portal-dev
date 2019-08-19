@@ -64,7 +64,7 @@
 
     // toggle button label/value defaults
     ctrl.toggleButtonOptions = [
-      { label: gettext('Yes'), value: true },
+      // { label: gettext('Yes'), value: true },
       { label: gettext('No'), value: false }
     ];
 
@@ -95,24 +95,24 @@
         displayedAvailable: $scope.model.images,
         displayedAllocated: selection
       },
-      snapshot: {
-        available: $scope.model.imageSnapshots,
-        allocated: selection,
-        displayedAvailable: [],
-        displayedAllocated: selection
-      },
-      volume: {
-        available: $scope.model.volumes,
-        allocated: selection,
-        displayedAvailable: [],
-        displayedAllocated: selection
-      },
-      volume_snapshot: {
-        available: $scope.model.volumeSnapshots,
-        allocated: selection,
-        displayedAvailable: [],
-        displayedAllocated: selection
-      }
+      // snapshot: {
+      //   available: $scope.model.imageSnapshots,
+      //   allocated: selection,
+      //   displayedAvailable: [],
+      //   displayedAllocated: selection
+      // },
+      // volume: {
+      //   available: $scope.model.volumes,
+      //   allocated: selection,
+      //   displayedAvailable: [],
+      //   displayedAllocated: selection
+      // },
+      // volume_snapshot: {
+      //   available: $scope.model.volumeSnapshots,
+      //   allocated: selection,
+      //   displayedAvailable: [],
+      //   displayedAllocated: selection
+      // }
     };
 
     var diskFormats = [
@@ -138,27 +138,27 @@
         { text: gettext('Type') },
         { text: gettext('Visibility') }
       ],
-      snapshot: [
-        { text: gettext('Name') },
-        { text: gettext('Updated') },
-        { text: gettext('Size') },
-        { text: gettext('Type') },
-        { text: gettext('Visibility') }
-      ],
-      volume: [
-        { text: gettext('Name') },
-        { text: gettext('Description') },
-        { text: gettext('Size') },
-        { text: gettext('Type') },
-        { text: gettext('Availability Zone') }
-      ],
-      volume_snapshot: [
-        { text: gettext('Name') },
-        { text: gettext('Description') },
-        { text: gettext('Size') },
-        { text: gettext('Created') },
-        { text: gettext('Status') }
-      ]
+      // snapshot: [
+      //   { text: gettext('Name') },
+      //   { text: gettext('Updated') },
+      //   { text: gettext('Size') },
+      //   { text: gettext('Type') },
+      //   { text: gettext('Visibility') }
+      // ],
+      // volume: [
+      //   { text: gettext('Name') },
+      //   { text: gettext('Description') },
+      //   { text: gettext('Size') },
+      //   { text: gettext('Type') },
+      //   { text: gettext('Availability Zone') }
+      // ],
+      // volume_snapshot: [
+      //   { text: gettext('Name') },
+      //   { text: gettext('Description') },
+      //   { text: gettext('Size') },
+      //   { text: gettext('Created') },
+      //   { text: gettext('Status') }
+      // ]
     };
 
     // Map Visibility data so we can decode true/false to Public/Private
@@ -173,27 +173,27 @@
         { key: 'disk_format', filter: diskFormatFilter, filterRawData: true },
         { key: 'is_public', filter: decodeFilter, filterArg: _visibilitymap }
       ],
-      snapshot: [
-        { key: 'name', classList: ['hi-light', 'word-break'] },
-        { key: 'updated_at', filter: dateFilter, filterArg: 'short' },
-        { key: 'size', filter: bytesFilter, classList: ['number'] },
-        { key: 'disk_format', filter: diskFormatFilter, filterRawData: true },
-        { key: 'is_public', filter: decodeFilter, filterArg: _visibilitymap }
-      ],
-      volume: [
-        { key: 'name', classList: ['hi-light', 'word-break'] },
-        { key: 'description' },
-        { key: 'size', filter: gbFilter, classList: ['number'] },
-        { key: 'volume_image_metadata', filter: diskFormatFilter },
-        { key: 'availability_zone' }
-      ],
-      volume_snapshot: [
-        { key: 'name', classList: ['hi-light', 'word-break'] },
-        { key: 'description' },
-        { key: 'size', filter: gbFilter, classList: ['number'] },
-        { key: 'created_at', filter: dateFilter, filterArg: 'short' },
-        { key: 'status' }
-      ]
+      // snapshot: [
+      //   { key: 'name', classList: ['hi-light', 'word-break'] },
+      //   { key: 'updated_at', filter: dateFilter, filterArg: 'short' },
+      //   { key: 'size', filter: bytesFilter, classList: ['number'] },
+      //   { key: 'disk_format', filter: diskFormatFilter, filterRawData: true },
+      //   { key: 'is_public', filter: decodeFilter, filterArg: _visibilitymap }
+      // ],
+      // volume: [
+      //   { key: 'name', classList: ['hi-light', 'word-break'] },
+      //   { key: 'description' },
+      //   { key: 'size', filter: gbFilter, classList: ['number'] },
+      //   { key: 'volume_image_metadata', filter: diskFormatFilter },
+      //   { key: 'availability_zone' }
+      // ],
+      // volume_snapshot: [
+      //   { key: 'name', classList: ['hi-light', 'word-break'] },
+      //   { key: 'description' },
+      //   { key: 'size', filter: gbFilter, classList: ['number'] },
+      //   { key: 'created_at', filter: dateFilter, filterArg: 'short' },
+      //   { key: 'status' }
+      // ]
     };
 
     /**
@@ -293,15 +293,15 @@
       image: [
         facets.name, facets.updated, facets.size, facets.type, facets.visibility
       ],
-      snapshot: [
-        facets.name, facets.updated, facets.size, facets.type, facets.visibility
-      ],
-      volume: [
-        facets.name, facets.description, facets.size, facets.volumeType, facets.encrypted
-      ],
-      volume_snapshot: [
-        facets.name, facets.description, facets.size, facets.created, facets.status
-      ]
+      // snapshot: [
+      //   facets.name, facets.updated, facets.size, facets.type, facets.visibility
+      // ],
+      // volume: [
+      //   facets.name, facets.description, facets.size, facets.volumeType, facets.encrypted
+      // ],
+      // volume_snapshot: [
+      //   facets.name, facets.description, facets.size, facets.created, facets.status
+      // ]
     };
 
     var newSpecWatcher = $scope.$watch(
@@ -356,50 +356,50 @@
       }
     );
 
-    var imageSnapshotsWatcher = $scope.$watchCollection(
-      function getImageSnapshots() {
-        return $scope.model.imageSnapshots;
-      },
-      function onImageSnapshotsChange() {
-        $scope.initPromise.then(function () {
-          $scope.$applyAsync(function () {
-            if ($scope.launchContext.imageId) {
-              setSourceImageSnapshotWithId($scope.launchContext.imageId);
-            }
-          });
-        });
-      }
-    );
+    // var imageSnapshotsWatcher = $scope.$watchCollection(
+    //   function getImageSnapshots() {
+    //     return $scope.model.imageSnapshots;
+    //   },
+    //   function onImageSnapshotsChange() {
+    //     $scope.initPromise.then(function () {
+    //       $scope.$applyAsync(function () {
+    //         if ($scope.launchContext.imageId) {
+    //           setSourceImageSnapshotWithId($scope.launchContext.imageId);
+    //         }
+    //       });
+    //     });
+    //   }
+    // );
 
-    var volumeWatcher = $scope.$watchCollection(
-      function getVolumes() {
-        return $scope.model.volumes;
-      },
-      function onVolumesChange() {
-        $scope.initPromise.then(function onInit() {
-          $scope.$applyAsync(function setDefaultVolume() {
-            if ($scope.launchContext.volumeId) {
-              setSourceVolumeWithId($scope.launchContext.volumeId);
-            }
-          });
-        });
-      }
-    );
+    // var volumeWatcher = $scope.$watchCollection(
+    //   function getVolumes() {
+    //     return $scope.model.volumes;
+    //   },
+    //   function onVolumesChange() {
+    //     $scope.initPromise.then(function onInit() {
+    //       $scope.$applyAsync(function setDefaultVolume() {
+    //         if ($scope.launchContext.volumeId) {
+    //           setSourceVolumeWithId($scope.launchContext.volumeId);
+    //         }
+    //       });
+    //     });
+    //   }
+    // );
 
-    var snapshotWatcher = $scope.$watchCollection(
-      function getSnapshots() {
-        return $scope.model.volumeSnapshots;
-      },
-      function onSnapshotsChange() {
-        $scope.initPromise.then(function onInit() {
-          $scope.$applyAsync(function setDefaultSnapshot() {
-            if ($scope.launchContext.snapshotId) {
-              setSourceSnapshotWithId($scope.launchContext.snapshotId);
-            }
-          });
-        });
-      }
-    );
+    // var snapshotWatcher = $scope.$watchCollection(
+    //   function getSnapshots() {
+    //     return $scope.model.volumeSnapshots;
+    //   },
+    //   function onSnapshotsChange() {
+    //     $scope.initPromise.then(function onInit() {
+    //       $scope.$applyAsync(function setDefaultSnapshot() {
+    //         if ($scope.launchContext.snapshotId) {
+    //           setSourceSnapshotWithId($scope.launchContext.snapshotId);
+    //         }
+    //       });
+    //     });
+    //   }
+    // );
 
     // When the allowedboot list changes, change the source_type
     // and update the table for the new source selection. Only done
@@ -435,9 +435,9 @@
       allocatedWatcher();
       bootSourceWatcher();
       imagesWatcher();
-      imageSnapshotsWatcher();
-      volumeWatcher();
-      snapshotWatcher();
+      // imageSnapshotsWatcher();
+      // volumeWatcher();
+      // snapshotWatcher();
       flavorWatcher();
     });
 
@@ -546,8 +546,8 @@
                     !instanceCount ||
                     instanceCount === 1;
 
-      $scope.launchInstanceSourceForm['boot-source-type']
-            .$setValidity('bootSourceType', isValid);
+      // $scope.launchInstanceSourceForm['boot-source-type']
+      //       .$setValidity('bootSourceType', isValid);
     }
 
     function findSourceById(sources, id) {
@@ -573,40 +573,40 @@
       }
     }
 
-    function setSourceImageSnapshotWithId(id) {
-      var pre = findSourceById($scope.model.imageSnapshots, id);
-      if (pre) {
-        changeBootSource(bootSourceTypes.INSTANCE_SNAPSHOT, [pre]);
-        $scope.model.newInstanceSpec.source_type = {
-          type: bootSourceTypes.INSTANCE_SNAPSHOT,
-          label: gettext('Snapshot')
-        };
-        ctrl.currentBootSource = bootSourceTypes.INSTANCE_SNAPSHOT;
-      }
-    }
+    // function setSourceImageSnapshotWithId(id) {
+    //   var pre = findSourceById($scope.model.imageSnapshots, id);
+    //   if (pre) {
+    //     changeBootSource(bootSourceTypes.INSTANCE_SNAPSHOT, [pre]);
+    //     $scope.model.newInstanceSpec.source_type = {
+    //       type: bootSourceTypes.INSTANCE_SNAPSHOT,
+    //       label: gettext('Snapshot')
+    //     };
+    //     ctrl.currentBootSource = bootSourceTypes.INSTANCE_SNAPSHOT;
+    //   }
+    // }
 
-    function setSourceVolumeWithId(id) {
-      var pre = findSourceById($scope.model.volumes, id);
-      if (pre) {
-        changeBootSource(bootSourceTypes.VOLUME, [pre]);
-        $scope.model.newInstanceSpec.source_type = {
-          type: bootSourceTypes.VOLUME,
-          label: gettext('Volume')
-        };
-        ctrl.currentBootSource = bootSourceTypes.VOLUME;
-      }
-    }
+    // function setSourceVolumeWithId(id) {
+    //   var pre = findSourceById($scope.model.volumes, id);
+    //   if (pre) {
+    //     changeBootSource(bootSourceTypes.VOLUME, [pre]);
+    //     $scope.model.newInstanceSpec.source_type = {
+    //       type: bootSourceTypes.VOLUME,
+    //       label: gettext('Volume')
+    //     };
+    //     ctrl.currentBootSource = bootSourceTypes.VOLUME;
+    //   }
+    // }
 
-    function setSourceSnapshotWithId(id) {
-      var pre = findSourceById($scope.model.volumeSnapshots, id);
-      if (pre) {
-        changeBootSource(bootSourceTypes.VOLUME_SNAPSHOT, [pre]);
-        $scope.model.newInstanceSpec.source_type = {
-          type: bootSourceTypes.VOLUME_SNAPSHOT,
-          label: gettext('Snapshot')
-        };
-        ctrl.currentBootSource = bootSourceTypes.VOLUME_SNAPSHOT;
-      }
-    }
+    // function setSourceSnapshotWithId(id) {
+    //   var pre = findSourceById($scope.model.volumeSnapshots, id);
+    //   if (pre) {
+    //     changeBootSource(bootSourceTypes.VOLUME_SNAPSHOT, [pre]);
+    //     $scope.model.newInstanceSpec.source_type = {
+    //       type: bootSourceTypes.VOLUME_SNAPSHOT,
+    //       label: gettext('Snapshot')
+    //     };
+    //     ctrl.currentBootSource = bootSourceTypes.VOLUME_SNAPSHOT;
+    //   }
+    // }
   }
 })();
