@@ -171,7 +171,8 @@
        */
 
       initialize: initialize,
-      createInstance: createInstance
+      createInstance: createInstance,
+      setFinalSpecs: setFinalSpecs,
     };
 
     // Local function.
@@ -305,6 +306,24 @@
       }
     }
 
+    function setFinalSpecs() {
+      var finalSpec = angular.copy(model.newInstanceSpec);
+
+      cleanNullProperties(finalSpec);
+
+      //setFinalSpecBootsource(finalSpec);
+      setFinalSpecFlavor(finalSpec);
+      setFinalSpecNetworks(finalSpec);
+      setFinalSpecPorts(finalSpec);
+      setFinalSpecKeyPairs(finalSpec);
+      setFinalSpecSecurityGroups(finalSpec);
+      setFinalSpecServerGroup(finalSpec);
+      setFinalSpecSchedulerHints(finalSpec);
+      setFinalSpecMetadata(finalSpec);
+
+      return finalSpec;
+    }
+
     /**
      * @ngdoc method
      * @name launchInstanceModel.createInstance
@@ -315,21 +334,9 @@
      */
 
     function createInstance() {
-      var finalSpec = angular.copy(model.newInstanceSpec);
+      var finalSpec = setFinalSpecs();
 
-      cleanNullProperties(finalSpec);
-
-      setFinalSpecBootsource(finalSpec);
-      setFinalSpecFlavor(finalSpec);
-      setFinalSpecNetworks(finalSpec);
-      setFinalSpecPorts(finalSpec);
-      setFinalSpecKeyPairs(finalSpec);
-      setFinalSpecSecurityGroups(finalSpec);
-      setFinalSpecServerGroup(finalSpec);
-      setFinalSpecSchedulerHints(finalSpec);
-      setFinalSpecMetadata(finalSpec);
-
-      window.alert(JSON.stringify(finalSpec));
+      // window.alert(JSON.stringify(finalSpec, null, 2));
       console.log(JSON.stringify(finalSpec));
 
       return successMessage; 
@@ -509,6 +516,18 @@
           });
       });
       delete finalSpec.networks;
+      
+      finalSpec.networkSettings = {};
+      for(var nkey in finalSpec.networksMap) {
+        finalSpec.networkSettings[nkey] = [];
+        finalSpec.networksMap[nkey].forEach(function (net) {
+          finalSpec.networkSettings[nkey].push({
+            name: net.name,
+            id: net.id,
+          });
+        });
+      }
+      delete finalSpec.networksMap;
     }
 
     function getPorts(networks) {

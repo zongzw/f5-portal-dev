@@ -43,7 +43,8 @@
     'horizon.framework.widgets.magic-search.events'
   ];
 
-  function LaunchInstanceSourceController($scope,
+  function LaunchInstanceSourceController(
+    $scope,
     bootSourceTypes,
     bytesFilter,
     dateFilter,

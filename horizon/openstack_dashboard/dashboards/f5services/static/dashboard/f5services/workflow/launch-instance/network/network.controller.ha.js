@@ -26,7 +26,7 @@
     .module('horizon.dashboard.f5services.workflow.launch-instance')
     .controller('LaunchInstanceHANetworkController', LaunchInstanceHANetworkController);
 
-    LaunchInstanceHANetworkController.$inject = [
+  LaunchInstanceHANetworkController.$inject = [
     '$scope',
     'horizon.framework.widgets.action-list.button-tooltip.row-warning.service',
     'launchInstanceModel'

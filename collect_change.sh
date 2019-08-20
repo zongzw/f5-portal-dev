@@ -9,6 +9,7 @@ if [ $# -ne 2 ]; then echo "$0 co1 co2"; exit 1; fi
     cd $cdir
     
     filelist=`git diff $1 $2 | grep -E "^\+\+\+ b/horizon/" | grep -oE "horizon/.*$"`
+    filelist=`git diff $1 $2 --name-only horizon/`
 
     mkdir -p dist 
     rm -rf dist/*

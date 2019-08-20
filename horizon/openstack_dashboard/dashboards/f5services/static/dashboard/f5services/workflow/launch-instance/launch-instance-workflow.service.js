@@ -148,6 +148,15 @@
           policy: stepPolicy.serverGroups,
           novaExtension: 'ServerGroups'
         },
+        {
+          id: 'summary',
+          title: gettext('Summary'),
+          templateUrl: basePath + 'summary/summary.html',
+          // helpUrl: basePath + 'server-groups/server-groups.help.html',
+          // formName: 'launchInstanceServerGroupsForm',
+          // policy: stepPolicy.serverGroups,
+          // novaExtension: 'ServerGroups'
+        },
         // {
         //   id: 'hints',
         //   title: gettext('Scheduler Hints'),
