@@ -157,6 +157,15 @@
           // policy: stepPolicy.serverGroups,
           // novaExtension: 'ServerGroups'
         },
+        {
+          id: 'test',
+          title: gettext('Test Page'),
+          templateUrl: basePath + 'network-map/network-map.html',
+          // helpUrl: basePath + 'server-groups/server-groups.help.html',
+          // formName: 'launchInstanceServerGroupsForm',
+          // policy: stepPolicy.serverGroups,
+          // novaExtension: 'ServerGroups'
+        },
         // {
         //   id: 'hints',
         //   title: gettext('Scheduler Hints'),

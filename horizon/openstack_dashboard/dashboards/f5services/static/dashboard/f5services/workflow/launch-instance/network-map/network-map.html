@@ -1,0 +1,43 @@
+<div ng-controller="LaunchInstanceNetworkMapController as ctrl">
+
+    <ul id="system_info" class="nav nav-tabs ajax-tabs" data-sticky-tabs="sticky">
+        <li class="active">
+            <a href="?tab=system_info__services" data-toggle="tab"
+                data-target="#system_info__services" data-loaded="true"
+                aria-expanded="false">Services</a>
+        </li>
+        <li class="">
+            <a href="?tab=system_info__nova_services" data-toggle="tab"
+                data-target="#system_info__nova_services" data-loaded="true"
+                aria-expanded="false">Compute Services</a>
+        </li>
+        <li class="">
+            <a href="?tab=system_info__cinder_services" data-toggle="tab"
+                data-target="#system_info__cinder_services" data-loaded="true"
+                aria-expanded="true">Block Storage Services</a>
+        </li>
+        <li class="">
+            <a href="?tab=system_info__network_agents" data-toggle="tab"
+                data-target="#system_info__network_agents" data-loaded="true"
+                aria-expanded="false">Network Agents</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="system_info__services" class="tab-pane active">
+            <ng-include src="ctrl.networkPages.mgmt"></ng-include>
+        </div>
+
+        <div id="system_info__nova_services" class="tab-pane">
+            <ng-include src="ctrl.networkPages.ext"></ng-include>
+        </div>
+
+        <div id="system_info__cinder_services" class="tab-pane">
+            <ng-include src="ctrl.networkPages.int"></ng-include>
+        </div>
+
+        <div id="system_info__network_agents" class="tab-pane">
+            <ng-include src="ctrl.networkPages.ha"></ng-include>
+        </div>
+    </div>
+</div>
