@@ -52,37 +52,46 @@
           helpUrl: basePath + 'flavor/flavor.help.html',
           formName: 'launchInstanceFlavorForm'
         },
+        // {
+        //   id: 'mgmtnetworks',
+        //   title: gettext('Networks - mgmt'),
+        //   templateUrl: basePath + 'network/network.mgmt.html',
+        //   helpUrl: basePath + 'network/network.help.html',
+        //   formName: 'launchInstanceMgmtNetworkForm',
+        //   requiredServiceTypes: ['network']
+        // },
+        // {
+        //   id: 'extnetworks',
+        //   title: gettext('Networks - ext'),
+        //   templateUrl: basePath + 'network/network.ext.html',
+        //   helpUrl: basePath + 'network/network.help.html',
+        //   formName: 'launchInstanceExtNetworkForm',
+        //   requiredServiceTypes: ['network']
+        // },
+        // {
+        //   id: 'intnetworks',
+        //   title: gettext('Networks - int'),
+        //   templateUrl: basePath + 'network/network.int.html',
+        //   helpUrl: basePath + 'network/network.help.html',
+        //   formName: 'launchInstanceIntNetworkForm',
+        //   requiredServiceTypes: ['network']
+        // },
+        // {
+        //   id: 'hanetworks',
+        //   title: gettext('Networks - HA'),
+        //   templateUrl: basePath + 'network/network.ha.html',
+        //   helpUrl: basePath + 'network/network.help.html',
+        //   formName: 'launchInstanceHANetworkForm',
+        //   requiredServiceTypes: ['network']
+        // },
         {
-          id: 'mgmtnetworks',
-          title: gettext('Networks - mgmt'),
-          templateUrl: basePath + 'network/network.mgmt.html',
-          helpUrl: basePath + 'network/network.help.html',
-          formName: 'launchInstanceMgmtNetworkForm',
-          requiredServiceTypes: ['network']
-        },
-        {
-          id: 'extnetworks',
-          title: gettext('Networks - ext'),
-          templateUrl: basePath + 'network/network.ext.html',
-          helpUrl: basePath + 'network/network.help.html',
-          formName: 'launchInstanceExtNetworkForm',
-          requiredServiceTypes: ['network']
-        },
-        {
-          id: 'intnetworks',
-          title: gettext('Networks - int'),
-          templateUrl: basePath + 'network/network.int.html',
-          helpUrl: basePath + 'network/network.help.html',
-          formName: 'launchInstanceIntNetworkForm',
-          requiredServiceTypes: ['network']
-        },
-        {
-          id: 'hanetworks',
-          title: gettext('Networks - HA'),
-          templateUrl: basePath + 'network/network.ha.html',
-          helpUrl: basePath + 'network/network.help.html',
-          formName: 'launchInstanceHANetworkForm',
-          requiredServiceTypes: ['network']
+          id: 'networks',
+          title: gettext('Networks'),
+          templateUrl: basePath + 'network-map/network-map.html',
+          // helpUrl: basePath + 'server-groups/server-groups.help.html',
+          // formName: 'launchInstanceServerGroupsForm',
+          // policy: stepPolicy.serverGroups,
+          // novaExtension: 'ServerGroups'
         },
         // {
         //   id: 'networks',
@@ -152,15 +161,6 @@
           id: 'summary',
           title: gettext('Summary'),
           templateUrl: basePath + 'summary/summary.html',
-          // helpUrl: basePath + 'server-groups/server-groups.help.html',
-          // formName: 'launchInstanceServerGroupsForm',
-          // policy: stepPolicy.serverGroups,
-          // novaExtension: 'ServerGroups'
-        },
-        {
-          id: 'test',
-          title: gettext('Test Page'),
-          templateUrl: basePath + 'network-map/network-map.html',
           // helpUrl: basePath + 'server-groups/server-groups.help.html',
           // formName: 'launchInstanceServerGroupsForm',
           // policy: stepPolicy.serverGroups,
