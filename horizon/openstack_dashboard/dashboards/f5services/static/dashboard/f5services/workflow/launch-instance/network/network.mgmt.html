@@ -1,7 +1,4 @@
 <div ng-controller="LaunchInstanceMgmtNetworkController as ctrl">
-  <p class="step-description" translate>
-    Networks provide the communication channels for instances in the cloud.
-  </p>
 
   <transfer-table tr-model="ctrl.tableDataMultiMgmt" help-text="ctrl.tableHelpText" limits="ctrl.tableLimits">
     <allocated validate-number-min="{$ ctrl.tableDataMultiMgmt.minItems $}" ng-model="ctrl.tableDataMultiMgmt.allocated.length">

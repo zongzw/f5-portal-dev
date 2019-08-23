@@ -89,7 +89,7 @@
           title: gettext('Networks'),
           templateUrl: basePath + 'network-map/network-map.html',
           // helpUrl: basePath + 'server-groups/server-groups.help.html',
-          // formName: 'launchInstanceServerGroupsForm',
+          formName: 'launchInstanceNetworkMapForm',
           // policy: stepPolicy.serverGroups,
           // novaExtension: 'ServerGroups'
         },

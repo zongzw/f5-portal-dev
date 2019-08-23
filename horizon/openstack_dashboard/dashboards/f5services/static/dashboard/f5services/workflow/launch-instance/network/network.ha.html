@@ -1,8 +1,4 @@
 <div ng-controller="LaunchInstanceHANetworkController as ctrl">
-  <p class="step-description" translate>
-    Networks provide the communication channels for instances in the cloud.
-  </p>
-
   <transfer-table tr-model="ctrl.tableDataMultiHA" help-text="ctrl.tableHelpText" limits="ctrl.tableLimits">
     <allocated validate-number-min="{$ ctrl.tableDataMultiHA.minItems $}" ng-model="ctrl.tableDataMultiHA.allocated.length">
       <table st-table="ctrl.tableDataMultiHA.displayedAllocated" st-safe-src="ctrl.tableDataMultiHA.allocated" hz-table

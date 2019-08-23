@@ -13,22 +13,12 @@
 from django.utils.translation import ugettext_lazy as _
 
 import horizon
+from openstack_dashboard.dashboards.f5services import dashboard
 
-class ServiceMgmt(horizon.PanelGroup):
-    slug = "aasgroup"
-    name = _("Service")
-    panels = ('f5ltm', 'f5waf', 'f5dns',)
-
-class DeviceMgmt(horizon.PanelGroup):
-    slug = "devices"
-    name = _("Device")
-    panels = ('f5adc',)
-
-class F5services(horizon.Dashboard):
-    name = _("F5 ADCaaS Dashboard")
-    slug = "f5services"
-    panels = (DeviceMgmt, ServiceMgmt,)  # Add your panels here.
-    default_panel = 'f5adc'  # Specify the slug of the dashboard's default panel.
+class F5overview(horizon.Panel):
+    name = _("Overview")
+    slug = "f5overview"
 
 
-horizon.register(F5services)
+dashboard.F5services.register(F5overview)
+

@@ -1,25 +1,33 @@
 <div ng-controller="LaunchInstanceNetworkMapController as ctrl">
 
-    <ul id="system_info" class="nav nav-tabs ajax-tabs" data-sticky-tabs="sticky">
+    <div id="valid" class="form-control" ng-required="ctrl.allNetReady" ng-hide="true"></div>
+
+    <p class="step-description" translate>
+        Networks provide the communication channels for instances in the cloud.
+    </p>
+    <br>
+
+    <ul id="system_info" class="nav nav-tabs ajax-tabs"
+        data-sticky-tabs="sticky">
         <li class="active">
             <a href="?tab=system_info__mgmt" data-toggle="tab"
                 data-target="#system_info__mgmt" data-loaded="true"
-                aria-expanded="false">Management</a>
+                aria-expanded="false">Management {$ ctrl.asterisk.mgmt $}</a>
         </li>
         <li class="">
             <a href="?tab=system_info__ext" data-toggle="tab"
                 data-target="#system_info__ext" data-loaded="true"
-                aria-expanded="false">External</a>
+                aria-expanded="false">External {$ ctrl.asterisk.ext $}</a>
         </li>
         <li class="">
             <a href="?tab=system_info__int" data-toggle="tab"
                 data-target="#system_info__int" data-loaded="true"
-                aria-expanded="true">Internal</a>
+                aria-expanded="true">Internal {$ ctrl.asterisk.int $}</a>
         </li>
         <li class="">
             <a href="?tab=system_info__ha" data-toggle="tab"
                 data-target="#system_info__ha" data-loaded="true"
-                aria-expanded="false">HA</a>
+                aria-expanded="false">HA {$ ctrl.asterisk.ha $}</a>
         </li>
     </ul>
 

@@ -1,8 +1,4 @@
 <div ng-controller="LaunchInstanceExtNetworkController as ctrl">
-  <p class="step-description" translate>
-    Networks provide the communication channels for instances in the cloud.
-  </p>
-
   <transfer-table tr-model="ctrl.tableDataMultiExt" help-text="ctrl.tableHelpText" limits="ctrl.tableLimits">
     <allocated validate-number-min="{$ ctrl.tableDataMultiExt.minItems $}" ng-model="ctrl.tableDataMultiExt.allocated.length">
       <table st-table="ctrl.tableDataMultiExt.displayedAllocated" st-safe-src="ctrl.tableDataMultiExt.allocated" hz-table

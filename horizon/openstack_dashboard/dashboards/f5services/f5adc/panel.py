@@ -18,7 +18,7 @@ import horizon
 from openstack_dashboard.dashboards.f5services import dashboard
 
 class F5adc(horizon.Panel):
-    name = _("ADC")
+    name = _("BIG-IP VE")
     slug = 'f5adc'
     permissions = ('openstack.services.compute',)
 

@@ -24,13 +24,12 @@
     LaunchInstanceNetworkMapController.$inject = [
         '$scope',
         'horizon.dashboard.f5services.workflow.launch-instance.basePath',
-        'launchInstanceModel',
+        'launchInstanceModel'
     ];
 
     function LaunchInstanceNetworkMapController($scope, basePath, launchInstanceModel) {
         var ctrl = this;
 
-        ctrl.name = 'zongzw';
         ctrl.networkPages = {
             mgmt: basePath + 'network/network.mgmt.html',
             ext: basePath + 'network/network.ext.html',
@@ -39,6 +38,33 @@
         };
 
         ctrl.networkPages_mgmt = basePath + 'network/network.mgmt.html';
-        return ctrl;
+
+        ctrl.asterisk = {
+            mgmt: '*',
+            ext: '*',
+            int: '*',
+            ha: '*',
+        };
+        
+        function getNewIntanceSpec() {
+            return launchInstanceModel.newInstanceSpec.networksMap;
+        }
+
+        ctrl.allNetReady = true; 
+
+        //var portWatcher = 
+        $scope.$watch(
+            getNewIntanceSpec,
+            function (newValue, oldValue) {
+                var valid = true;
+                for(var i of Object.keys(ctrl.asterisk)) {
+                    var gt0 = (newValue[i].length > 0);
+                    ctrl.asterisk[i] = gt0 ? ' ' : '*';
+                    valid = valid & gt0;
+                }
+                ctrl.allNetReady = valid;
+            }, 
+            true
+        );
     }
 })();
