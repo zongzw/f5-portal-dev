@@ -62,7 +62,7 @@
                     ctrl.asterisk[i] = gt0 ? ' ' : '*';
                     valid = valid & gt0;
                 }
-                ctrl.allNetReady = valid;
+                ctrl.allNetReady = valid; 
             }, 
             true
         );

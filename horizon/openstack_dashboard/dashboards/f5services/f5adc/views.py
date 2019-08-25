@@ -60,7 +60,7 @@ LOG = logging.getLogger(__name__)
 
 class IndexView(tables.DataTableView):
     table_class = adc_tables.InstancesTable
-    page_title = _("ADC")
+    page_title = _("Application Delivery Controller")
 
     def has_more_data(self, table):
         return self._more
