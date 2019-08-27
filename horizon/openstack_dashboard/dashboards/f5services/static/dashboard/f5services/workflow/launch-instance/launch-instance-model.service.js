@@ -269,7 +269,7 @@
           serviceCatalog.ifTypeEnabled('network').then(getNetworks, noop),
           launchInstanceDefaults.then(addImageSourcesIfEnabled, noop),
           launchInstanceDefaults.then(setDefaultValues, noop),
-          launchInstanceDefaults.then(addVolumeSourcesIfEnabled, noop)
+          // launchInstanceDefaults.then(addVolumeSourcesIfEnabled, noop)
         ]);
 
         promise.then(onInitSuccess, onInitFail);
@@ -596,84 +596,84 @@
           if (enabledImage) {
             onGetImages(data);
           }
-          if (enabledSnapshot) {
-            onGetSnapshots(data);
-          }
+          // if (enabledSnapshot) {
+          //   onGetSnapshots(data);
+          // }
         });
       }
     }
 
-    function addVolumeSourcesIfEnabled(config) {
-      var volumeDeferred = $q.defer();
-      var volumeSnapshotDeferred = $q.defer();
-      var absoluteLimitsDeferred = $q.defer();
-      serviceCatalog
-        .ifTypeEnabled('volumev2')
-        .then(onVolumeServiceEnabled, onCheckVolumeV3);
-      function onCheckVolumeV3() {
-        serviceCatalog
-          .ifTypeEnabled('volumev3')
-          .then(onVolumeServiceEnabled, resolvePromises);
-      }
-      function onVolumeServiceEnabled() {
-        model.volumeBootable = true;
-        novaExtensions
-          .ifNameEnabled('BlockDeviceMappingV2Boot')
-          .then(onBootToVolumeSupported);
-        if (!config || !config.disable_volume) {
-          getVolumes().then(resolveVolumes, failVolumes);
-          getAbsoluteLimits().then(resolveAbsoluteLimitsDeferred, resolveAbsoluteLimitsDeferred);
-        } else {
-          resolveVolumes();
-          resolveAbsoluteLimitsDeferred();
-        }
-        if (!config || !config.disable_volume_snapshot) {
-          getVolumeSnapshots().then(resolveVolumeSnapshots, failVolumeSnapshots);
-        } else {
-          resolveVolumeSnapshots();
-        }
-      }
-      function onBootToVolumeSupported() {
-        model.allowCreateVolumeFromImage = true;
-      }
-      function getVolumes() {
-        return cinderAPI.getVolumes({status: 'available', bootable: 1})
-          .then(onGetVolumes);
-      }
-      function getAbsoluteLimits() {
-        return cinderAPI.getAbsoluteLimits().then(onGetCinderLimits);
-      }
-      function getVolumeSnapshots() {
-        return cinderAPI.getVolumeSnapshots({status: 'available'})
-          .then(onGetVolumeSnapshots);
-      }
-      function resolvePromises() {
-        volumeDeferred.resolve();
-        volumeSnapshotDeferred.resolve();
-        absoluteLimitsDeferred.resolve();
-      }
-      function resolveVolumes() {
-        volumeDeferred.resolve();
-      }
-      function failVolumes() {
-        volumeDeferred.resolve();
-      }
-      function resolveVolumeSnapshots() {
-        volumeSnapshotDeferred.resolve();
-      }
-      function failVolumeSnapshots() {
-        volumeSnapshotDeferred.resolve();
-      }
-      function resolveAbsoluteLimitsDeferred() {
-        absoluteLimitsDeferred.resolve();
-      }
-      return $q.all(
-        [
-          volumeDeferred.promise,
-          volumeSnapshotDeferred.promise,
-          absoluteLimitsDeferred.promise
-        ]);
-    }
+    // function addVolumeSourcesIfEnabled(config) {
+    //   var volumeDeferred = $q.defer();
+    //   var volumeSnapshotDeferred = $q.defer();
+    //   var absoluteLimitsDeferred = $q.defer();
+    //   serviceCatalog
+    //     .ifTypeEnabled('volumev2')
+    //     .then(onVolumeServiceEnabled, onCheckVolumeV3);
+    //   function onCheckVolumeV3() {
+    //     serviceCatalog
+    //       .ifTypeEnabled('volumev3')
+    //       .then(onVolumeServiceEnabled, resolvePromises);
+    //   }
+    //   function onVolumeServiceEnabled() {
+    //     model.volumeBootable = true;
+    //     novaExtensions
+    //       .ifNameEnabled('BlockDeviceMappingV2Boot')
+    //       .then(onBootToVolumeSupported);
+    //     if (!config || !config.disable_volume) {
+    //       getVolumes().then(resolveVolumes, failVolumes);
+    //       getAbsoluteLimits().then(resolveAbsoluteLimitsDeferred, resolveAbsoluteLimitsDeferred);
+    //     } else {
+    //       resolveVolumes();
+    //       resolveAbsoluteLimitsDeferred();
+    //     }
+    //     if (!config || !config.disable_volume_snapshot) {
+    //       getVolumeSnapshots().then(resolveVolumeSnapshots, failVolumeSnapshots);
+    //     } else {
+    //       resolveVolumeSnapshots();
+    //     }
+    //   }
+    //   function onBootToVolumeSupported() {
+    //     model.allowCreateVolumeFromImage = true;
+    //   }
+    //   function getVolumes() {
+    //     return cinderAPI.getVolumes({status: 'available', bootable: 1})
+    //       .then(onGetVolumes);
+    //   }
+    //   function getAbsoluteLimits() {
+    //     return cinderAPI.getAbsoluteLimits().then(onGetCinderLimits);
+    //   }
+    //   // function getVolumeSnapshots() {
+    //   //   return cinderAPI.getVolumeSnapshots({status: 'available'})
+    //   //     .then(onGetVolumeSnapshots);
+    //   // }
+    //   function resolvePromises() {
+    //     volumeDeferred.resolve();
+    //     volumeSnapshotDeferred.resolve();
+    //     absoluteLimitsDeferred.resolve();
+    //   }
+    //   function resolveVolumes() {
+    //     volumeDeferred.resolve();
+    //   }
+    //   function failVolumes() {
+    //     volumeDeferred.resolve();
+    //   }
+    //   function resolveVolumeSnapshots() {
+    //     volumeSnapshotDeferred.resolve();
+    //   }
+    //   function failVolumeSnapshots() {
+    //     volumeSnapshotDeferred.resolve();
+    //   }
+    //   function resolveAbsoluteLimitsDeferred() {
+    //     absoluteLimitsDeferred.resolve();
+    //   }
+    //   return $q.all(
+    //     [
+    //       volumeDeferred.promise,
+    //       volumeSnapshotDeferred.promise,
+    //       absoluteLimitsDeferred.promise
+    //     ]);
+    // }
 
     function isBootableImageType(image) {
       // This is a blacklist of images that can not be booted.
@@ -695,35 +695,35 @@
       addAllowedBootSource(model.images, bootSourceTypes.IMAGE, gettext('Image'));
     }
 
-    function onGetSnapshots(data) {
-      model.imageSnapshots.length = 0;
-      push.apply(model.imageSnapshots, data.data.items.filter(function (image) {
-        return isBootableImageType(image) &&
-          (image.properties && image.properties.image_type === 'snapshot');
-      }));
+    // function onGetSnapshots(data) {
+    //   model.imageSnapshots.length = 0;
+    //   push.apply(model.imageSnapshots, data.data.items.filter(function (image) {
+    //     return isBootableImageType(image) &&
+    //       (image.properties && image.properties.image_type === 'snapshot');
+    //   }));
 
-      addAllowedBootSource(
-        model.imageSnapshots,
-        bootSourceTypes.INSTANCE_SNAPSHOT,
-        gettext('Instance Snapshot')
-      );
-    }
+    //   addAllowedBootSource(
+    //     model.imageSnapshots,
+    //     bootSourceTypes.INSTANCE_SNAPSHOT,
+    //     gettext('Instance Snapshot')
+    //   );
+    // }
 
-    function onGetVolumes(data) {
-      model.volumes.length = 0;
-      push.apply(model.volumes, data.data.items);
-      addAllowedBootSource(model.volumes, bootSourceTypes.VOLUME, gettext('Volume'));
-    }
+    // function onGetVolumes(data) {
+    //   model.volumes.length = 0;
+    //   push.apply(model.volumes, data.data.items);
+    //   addAllowedBootSource(model.volumes, bootSourceTypes.VOLUME, gettext('Volume'));
+    // }
 
-    function onGetVolumeSnapshots(data) {
-      model.volumeSnapshots.length = 0;
-      push.apply(model.volumeSnapshots, data.data.items);
-      addAllowedBootSource(
-        model.volumeSnapshots,
-        bootSourceTypes.VOLUME_SNAPSHOT,
-        gettext('Volume Snapshot')
-      );
-    }
+    // function onGetVolumeSnapshots(data) {
+    //   model.volumeSnapshots.length = 0;
+    //   push.apply(model.volumeSnapshots, data.data.items);
+    //   addAllowedBootSource(
+    //     model.volumeSnapshots,
+    //     bootSourceTypes.VOLUME_SNAPSHOT,
+    //     gettext('Volume Snapshot')
+    //   );
+    // }
 
     function addAllowedBootSource(rawTypes, type, label) {
       if (rawTypes) {
