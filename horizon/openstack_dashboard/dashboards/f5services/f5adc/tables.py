@@ -984,25 +984,69 @@ class DetachInterface(policy.PolicyTargetMixin, tables.LinkAction):
 
 def get_ips(instance):
     template_name = 'f5services/f5adc/_instance_ips.html'
-    ip_groups = {}
+    ip_groups = {
+        'mgmt': {
+            'floating': [],
+            'non_floating': [],
+        },
+        'ext': {
+            'floating': [],
+            'non_floating': [],
+        },
+        'int': {
+            'floating': [],
+            'non_floating': [],
+        },
+        'ha': {
+            'floating': [],
+            'non_floating': [],
+        }
+    }
 
-    for ip_group, addresses in instance.addresses.items():
-        ip_groups[ip_group] = {}
-        ip_groups[ip_group]["floating"] = []
-        ip_groups[ip_group]["non_floating"] = []
+    for (k, v) in instance.management['networks'].items():
+        net_type = instance.networks[k]['type']
+        ip_groups[net_type]['non_floating'].append({
+            'addr': "%s:%s" % (k, v['fixedIp']),
+        })
 
-        for address in addresses:
-            if ('OS-EXT-IPS:type' in address and
-               address['OS-EXT-IPS:type'] == "floating"):
-                ip_groups[ip_group]["floating"].append(address)
-            else:
-                ip_groups[ip_group]["non_floating"].append(address)
+    
+    # for ip_group, addresses in instance.addresses.items():
+    #     ip_groups[ip_group] = {}
+    #     ip_groups[ip_group]["floating"] = []
+    #     ip_groups[ip_group]["non_floating"] = []
+
+    #     for address in addresses:
+    #         if ('OS-EXT-IPS:type' in address and
+    #            address['OS-EXT-IPS:type'] == "floating"):
+    #             ip_groups[ip_group]["floating"].append(address)
+    #         else:
+    #             ip_groups[ip_group]["non_floating"].append(address)
 
     context = {
         "ip_groups": ip_groups,
     }
     return template.loader.render_to_string(template_name, context)
 
+# def get_ips(instance):
+#     template_name = 'f5services/f5adc/_instance_ips.html'
+#     ip_groups = {}
+
+#     for ip_group, addresses in instance.addresses.items():
+#         ip_groups[ip_group] = {}
+#         ip_groups[ip_group]["floating"] = []
+#         ip_groups[ip_group]["non_floating"] = []
+
+#         for address in addresses:
+#             if ('OS-EXT-IPS:type' in address and
+#                address['OS-EXT-IPS:type'] == "floating"):
+#                 ip_groups[ip_group]["floating"].append(address)
+#             else:
+#                 ip_groups[ip_group]["non_floating"].append(address)
+
+#     context = {
+#         "ip_groups": ip_groups,
+#     }
+#     return template.loader.render_to_string(template_name, context)
 
 def get_flavor(instance):
     if hasattr(instance, "full_flavor"):
@@ -1205,14 +1249,107 @@ def render_locked(instance):
 
 
 def get_server_detail_link(obj, request):
+    obj_id = obj.compute['vm_id'] if 'vm_id' in obj.compute else 'unknown'
     return get_url_with_pagination(request,
-                                   InstancesTable._meta.pagination_param,
-                                   InstancesTable._meta.prev_pagination_param,
-                                   'horizon:f5services:f5adc:detail',
-                                   obj.id)
+                                InstancesTable._meta.pagination_param,
+                                InstancesTable._meta.prev_pagination_param,
+                                'horizon:f5services:f5adc:detail',
+                                obj_id)
 
 
 class InstancesTable(tables.DataTable):
+    TASK_STATUS_CHOICES = (
+        (None, True),
+        ("none", True)
+    )
+    STATUS_CHOICES = (
+        ("active", True),
+        ("shutoff", True),
+        ("suspended", True),
+        ("paused", True),
+        ("error", False),
+        ("rescue", True),
+        ("shelved", True),
+        ("shelved_offloaded", True),
+    )
+    
+    name = tables.WrappingColumn("name",
+                                 link=get_server_detail_link,
+                                 verbose_name=_("Instance Name"))
+    image_name = tables.WrappingColumn("image_name",
+                                       verbose_name=_("Image Name"))
+    # ip = tables.Column(get_ips,
+    #                    verbose_name=_("IP Address"),
+    #                    attrs={'data-type': "ip"})
+    ve_type = tables.Column('type', verbose_name=_('Type'))
+    flavor = tables.Column(get_flavor,
+                           sortable=False,
+                           verbose_name=_("Flavor"))
+    ip = tables.Column(get_ips,
+                       verbose_name=_("IP Address"),
+                       attrs={'data-type': "ip"})
+    # keypair = tables.Column(get_keyname, verbose_name=_("Key Pair"))
+    # status = tables.Column("status",
+    #                        filters=(title, filters.replace_underscores),
+    #                        verbose_name=_("Status"),
+    #                        status=True,
+    #                        status_choices=STATUS_CHOICES,
+    #                        display_choices=STATUS_DISPLAY_CHOICES)
+    created = tables.Column('createdAt', verbose_name=_('Created At'))
+
+    status = tables.Column("status",
+                           verbose_name=_("Status"),
+                           status=True)
+    lastErr = tables.Column('lastErr', 
+                            verbose_name=_('Last Error'))
+    # locked = tables.Column(render_locked,
+    #                        verbose_name="",
+    #                        sortable=False)
+    # az = tables.Column("availability_zone",
+    #                    verbose_name=_("Availability Zone"))
+    # task = tables.Column("OS-EXT-STS:task_state",
+    #                      verbose_name=_("Task"),
+    #                      empty_value=TASK_DISPLAY_NONE,
+    #                      status=True,
+    #                      status_choices=TASK_STATUS_CHOICES,
+    #                      display_choices=TASK_DISPLAY_CHOICES)
+    # state = tables.Column(get_power_state,
+    #                       filters=(title, filters.replace_underscores),
+    #                       verbose_name=_("Power State"),
+    #                       display_choices=POWER_DISPLAY_CHOICES)
+    # created = tables.Column("created",
+    #                         verbose_name=_("Time since created"),
+    #                         filters=(filters.parse_isotime,
+    #                                  filters.timesince_sortable),
+    #                         attrs={'data-type': 'timesince'})    
+
+    class Meta(object):
+        name = "instances"
+        verbose_name = _("Instances")
+        # status_columns = ["status", "task"]
+        status_columns = ["status"]
+        # row_class = UpdateRow
+        table_actions_menu = (StartInstance, StopInstance, SoftRebootInstance)
+        launch_actions = ()
+        # if getattr(settings, 'LAUNCH_INSTANCE_LEGACY_ENABLED', False):
+        #     launch_actions = (LaunchLink,) + launch_actions
+        # if getattr(settings, 'LAUNCH_INSTANCE_NG_ENABLED', True):
+        #     launch_actions = (LaunchLinkNG,) + launch_actions
+        table_actions = (LaunchLinkNG,) + (DeleteInstance,
+                                          InstancesFilterAction)
+        # row_actions = (StartInstance, ConfirmResize, RevertResize,
+        #                CreateSnapshot, AssociateIP,
+        #                SimpleDisassociateIP, AttachInterface,
+        #                DetachInterface, EditInstance, AttachVolume,
+        #                DetachVolume, UpdateMetadata, DecryptInstancePassword,
+        #                EditInstanceSecurityGroups, ConsoleLink, LogLink,
+        #                TogglePause, ToggleSuspend, ToggleShelve,
+        #                ResizeLink, LockInstance, UnlockInstance,
+        #                SoftRebootInstance, RebootInstance,
+        #                StopInstance, RebuildInstance, DeleteInstance)
+        row_actions = (DeleteInstance,)
+
+class ADCsTable(tables.DataTable):
     TASK_STATUS_CHOICES = (
         (None, True),
         ("none", True)
@@ -1232,39 +1369,39 @@ class InstancesTable(tables.DataTable):
                                  verbose_name=_("Instance Name"))
     image_name = tables.WrappingColumn("image_name",
                                        verbose_name=_("Image Name"))
-    ip = tables.Column(get_ips,
-                       verbose_name=_("IP Address"),
-                       attrs={'data-type': "ip"})
-    flavor = tables.Column(get_flavor,
-                           sortable=False,
-                           verbose_name=_("Flavor"))
-    keypair = tables.Column(get_keyname, verbose_name=_("Key Pair"))
-    status = tables.Column("status",
-                           filters=(title, filters.replace_underscores),
-                           verbose_name=_("Status"),
-                           status=True,
-                           status_choices=STATUS_CHOICES,
-                           display_choices=STATUS_DISPLAY_CHOICES)
-    locked = tables.Column(render_locked,
-                           verbose_name="",
-                           sortable=False)
-    az = tables.Column("availability_zone",
-                       verbose_name=_("Availability Zone"))
-    task = tables.Column("OS-EXT-STS:task_state",
-                         verbose_name=_("Task"),
-                         empty_value=TASK_DISPLAY_NONE,
-                         status=True,
-                         status_choices=TASK_STATUS_CHOICES,
-                         display_choices=TASK_DISPLAY_CHOICES)
-    state = tables.Column(get_power_state,
-                          filters=(title, filters.replace_underscores),
-                          verbose_name=_("Power State"),
-                          display_choices=POWER_DISPLAY_CHOICES)
-    created = tables.Column("created",
-                            verbose_name=_("Time since created"),
-                            filters=(filters.parse_isotime,
-                                     filters.timesince_sortable),
-                            attrs={'data-type': 'timesince'})
+    # ip = tables.Column(get_ips,
+    #                    verbose_name=_("IP Address"),
+    #                    attrs={'data-type': "ip"})
+    # flavor = tables.Column(get_flavor,
+    #                        sortable=False,
+    #                        verbose_name=_("Flavor"))
+    # keypair = tables.Column(get_keyname, verbose_name=_("Key Pair"))
+    # status = tables.Column("status",
+    #                        filters=(title, filters.replace_underscores),
+    #                        verbose_name=_("Status"),
+    #                        status=True,
+    #                        status_choices=STATUS_CHOICES,
+    #                        display_choices=STATUS_DISPLAY_CHOICES)
+    # locked = tables.Column(render_locked,
+    #                        verbose_name="",
+    #                        sortable=False)
+    # az = tables.Column("availability_zone",
+    #                    verbose_name=_("Availability Zone"))
+    # task = tables.Column("OS-EXT-STS:task_state",
+    #                      verbose_name=_("Task"),
+    #                      empty_value=TASK_DISPLAY_NONE,
+    #                      status=True,
+    #                      status_choices=TASK_STATUS_CHOICES,
+    #                      display_choices=TASK_DISPLAY_CHOICES)
+    # state = tables.Column(get_power_state,
+    #                       filters=(title, filters.replace_underscores),
+    #                       verbose_name=_("Power State"),
+    #                       display_choices=POWER_DISPLAY_CHOICES)
+    # created = tables.Column("created",
+    #                         verbose_name=_("Time since created"),
+    #                         filters=(filters.parse_isotime,
+    #                                  filters.timesince_sortable),
+    #                         attrs={'data-type': 'timesince'})
 
     class Meta(object):
         name = "instances"
@@ -1289,3 +1426,4 @@ class InstancesTable(tables.DataTable):
         #                ResizeLink, LockInstance, UnlockInstance,
         #                SoftRebootInstance, RebootInstance,
         #                StopInstance, RebuildInstance, DeleteInstance)
+

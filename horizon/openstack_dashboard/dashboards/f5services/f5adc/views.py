@@ -58,56 +58,134 @@ from openstack_dashboard.views import get_url_with_pagination
 LOG = logging.getLogger(__name__)
 
 
+# class IndexView(tables.DataTableView):
+#     table_class = adc_tables.InstancesTable
+#     page_title = _("Application Delivery Controller")
+
+#     def has_more_data(self, table):
+#         return self._more
+
+#     def get_data(self):
+#         marker = self.request.GET.get(
+#             adc_tables.InstancesTable._meta.pagination_param, None)
+#         search_opts = self.get_filters({'marker': marker, 'paginate': True})
+
+#         instances = []
+#         flavors = []
+#         full_flavors = {}
+#         images = []
+#         image_map = {}
+
+#         def _task_get_instances():
+#             # Gather our instances
+#             try:
+#                 tmp_instances, self._more = api.nova.server_list(
+#                     self.request,
+#                     search_opts=search_opts)
+#                 instances.extend(tmp_instances)
+#             except Exception:
+#                 self._more = False
+#                 exceptions.handle(self.request,
+#                                   _('Unable to retrieve instances.'))
+#                 # In case of exception when calling nova.server_list
+#                 # don't call api.network
+#                 return
+
+#             # TODO(future): Explore more efficient logic to sync IP address
+#             # and drop the setting OPENSTACK_INSTANCE_RETRIEVE_IP_ADDRESSES.
+#             # The situation servers_update_addresses() is needed # is only
+#             # when IP address of a server is updated via neutron API and
+#             # nova network info cache is not synced. Precisely there is no
+#             # need to check IP addresses of all serves. It is sufficient to
+#             # fetch IP address information for servers recently updated.
+#             if not getattr(settings,
+#                            'OPENSTACK_INSTANCE_RETRIEVE_IP_ADDRESSES', True):
+#                 return
+#             try:
+#                 api.network.servers_update_addresses(self.request, instances)
+#             except Exception:
+#                 exceptions.handle(
+#                     self.request,
+#                     message=_('Unable to retrieve IP addresses from Neutron.'),
+#                     ignore=True)
+
+#         def _task_get_flavors():
+#             # Gather our flavors to correlate our instances to them
+#             try:
+#                 tmp_flavors = api.nova.flavor_list(self.request)
+#                 flavors.extend(tmp_flavors)
+#                 full_flavors.update([(str(flavor.id), flavor)
+#                                      for flavor in flavors])
+#             except Exception:
+#                 exceptions.handle(self.request, ignore=True)
+
+#         def _task_get_images():
+#             # Gather our images to correlate our instances to them
+#             try:
+#                 # TODO(gabriel): Handle pagination.
+#                 tmp_images = api.glance.image_list_detailed(self.request)[0]
+#                 images.extend(tmp_images)
+#                 image_map.update([(str(image.id), image) for image in images])
+#             except Exception:
+#                 exceptions.handle(self.request, ignore=True)
+
+#         with futurist.ThreadPoolExecutor(max_workers=3) as e:
+#             e.submit(fn=_task_get_flavors)
+#             e.submit(fn=_task_get_images)
+
+#         non_api_filter_info = (
+#             ('image_name', 'image', images),
+#             ('flavor_name', 'flavor', flavors),
+#         )
+#         if not process_non_api_filters(search_opts, non_api_filter_info):
+#             self._more = False
+#             return []
+
+#         _task_get_instances()
+
+#         # Loop through instances to get flavor info.
+#         for instance in instances:
+#             if hasattr(instance, 'image'):
+#                 # Instance from image returns dict
+#                 if isinstance(instance.image, dict):
+#                     if instance.image.get('id') in image_map:
+#                         instance.image = image_map[instance.image.get('id')]
+#                     # In case image not found in image_map, set name to empty
+#                     # to avoid fallback API call to Glance in api/nova.py
+#                     # until the call is deprecated in api itself
+#                     else:
+#                         instance.image['name'] = _("-")
+
+#             flavor_id = instance.flavor["id"]
+#             if flavor_id in full_flavors:
+#                 instance.full_flavor = full_flavors[flavor_id]
+#             else:
+#                 # If the flavor_id is not in full_flavors list,
+#                 # put info in the log file.
+#                 msg = ('Unable to retrieve flavor "%s" for instance "%s".'
+#                        % (flavor_id, instance.id))
+#                 LOG.info(msg)
+
+#         return instances
+
 class IndexView(tables.DataTableView):
     table_class = adc_tables.InstancesTable
     page_title = _("Application Delivery Controller")
 
-    def has_more_data(self, table):
-        return self._more
-
     def get_data(self):
-        marker = self.request.GET.get(
-            adc_tables.InstancesTable._meta.pagination_param, None)
-        search_opts = self.get_filters({'marker': marker, 'paginate': True})
-
-        instances = []
-        flavors = []
-        full_flavors = {}
+        try:
+            adcs = api.f5wafaas.adc_list(self.request)
+        except Exception:
+            exceptions.handle(self.request,
+                                _('Unable to retrieve instances.'))
+            # In case of exception when calling nova.server_list
+            # don't call api.network
+            return
+        
         images = []
         image_map = {}
-
-        def _task_get_instances():
-            # Gather our instances
-            try:
-                tmp_instances, self._more = api.nova.server_list(
-                    self.request,
-                    search_opts=search_opts)
-                instances.extend(tmp_instances)
-            except Exception:
-                self._more = False
-                exceptions.handle(self.request,
-                                  _('Unable to retrieve instances.'))
-                # In case of exception when calling nova.server_list
-                # don't call api.network
-                return
-
-            # TODO(future): Explore more efficient logic to sync IP address
-            # and drop the setting OPENSTACK_INSTANCE_RETRIEVE_IP_ADDRESSES.
-            # The situation servers_update_addresses() is needed # is only
-            # when IP address of a server is updated via neutron API and
-            # nova network info cache is not synced. Precisely there is no
-            # need to check IP addresses of all serves. It is sufficient to
-            # fetch IP address information for servers recently updated.
-            if not getattr(settings,
-                           'OPENSTACK_INSTANCE_RETRIEVE_IP_ADDRESSES', True):
-                return
-            try:
-                api.network.servers_update_addresses(self.request, instances)
-            except Exception:
-                exceptions.handle(
-                    self.request,
-                    message=_('Unable to retrieve IP addresses from Neutron.'),
-                    ignore=True)
+        flavors = []
+        full_flavors = {}
 
         def _task_get_flavors():
             # Gather our flavors to correlate our instances to them
@@ -128,46 +206,135 @@ class IndexView(tables.DataTableView):
                 image_map.update([(str(image.id), image) for image in images])
             except Exception:
                 exceptions.handle(self.request, ignore=True)
-
+        
         with futurist.ThreadPoolExecutor(max_workers=3) as e:
             e.submit(fn=_task_get_flavors)
             e.submit(fn=_task_get_images)
 
-        non_api_filter_info = (
-            ('image_name', 'image', images),
-            ('flavor_name', 'flavor', flavors),
-        )
-        if not process_non_api_filters(search_opts, non_api_filter_info):
-            self._more = False
-            return []
+        for n in adcs: 
+            image_id = n.compute['imageRef']
+            flavor_id = n.compute['flavorRef']
+            n.image_name = image_map[image_id].name
+            n.full_flavor = full_flavors[flavor_id]
 
-        _task_get_instances()
+        return adcs
 
-        # Loop through instances to get flavor info.
-        for instance in instances:
-            if hasattr(instance, 'image'):
-                # Instance from image returns dict
-                if isinstance(instance.image, dict):
-                    if instance.image.get('id') in image_map:
-                        instance.image = image_map[instance.image.get('id')]
-                    # In case image not found in image_map, set name to empty
-                    # to avoid fallback API call to Glance in api/nova.py
-                    # until the call is deprecated in api itself
-                    else:
-                        instance.image['name'] = _("-")
+    # def get_data(self):
+    #     marker = self.request.GET.get(
+    #         adc_tables.InstancesTable._meta.pagination_param, None)
+    #     search_opts = self.get_filters({'marker': marker, 'paginate': True})
 
-            flavor_id = instance.flavor["id"]
-            if flavor_id in full_flavors:
-                instance.full_flavor = full_flavors[flavor_id]
-            else:
-                # If the flavor_id is not in full_flavors list,
-                # put info in the log file.
-                msg = ('Unable to retrieve flavor "%s" for instance "%s".'
-                       % (flavor_id, instance.id))
-                LOG.info(msg)
+    #     instances = []
+    #     flavors = []
+    #     full_flavors = {}
+    #     images = []
+    #     image_map = {}
 
-        return instances
+    #     def _task_get_instances():
+    #         # Gather our instances
+    #         # try:
+    #         #     tmp_instances, self._more = api.nova.server_list(
+    #         #         self.request,
+    #         #         search_opts=search_opts)
+    #         #     instances.extend(tmp_instances)
+    #         # except Exception:
+    #         #     self._more = False
+    #         #     exceptions.handle(self.request,
+    #         #                       _('Unable to retrieve instances.'))
+    #         #     # In case of exception when calling nova.server_list
+    #         #     # don't call api.network
+    #         #     return
 
+    #         try:
+    #             tmp_instances, self._more = api.nova.server_list(
+    #                 self.request,
+    #                 search_opts=search_opts)
+    #             instances.extend(tmp_instances)
+    #             adc_list = api.f5wafaas.adc_list(self.request)
+    #         except Exception:
+    #             self._more = False
+    #             exceptions.handle(self.request,
+    #                               _('Unable to retrieve instances.'))
+    #             # In case of exception when calling nova.server_list
+    #             # don't call api.network
+    #             return
+
+    #         # TODO(future): Explore more efficient logic to sync IP address
+    #         # and drop the setting OPENSTACK_INSTANCE_RETRIEVE_IP_ADDRESSES.
+    #         # The situation servers_update_addresses() is needed # is only
+    #         # when IP address of a server is updated via neutron API and
+    #         # nova network info cache is not synced. Precisely there is no
+    #         # need to check IP addresses of all serves. It is sufficient to
+    #         # fetch IP address information for servers recently updated.
+    #         if not getattr(settings,
+    #                        'OPENSTACK_INSTANCE_RETRIEVE_IP_ADDRESSES', True):
+    #             return
+    #         try:
+    #             api.network.servers_update_addresses(self.request, instances)
+    #         except Exception:
+    #             exceptions.handle(
+    #                 self.request,
+    #                 message=_('Unable to retrieve IP addresses from Neutron.'),
+    #                 ignore=True)
+
+    #     def _task_get_flavors():
+    #         # Gather our flavors to correlate our instances to them
+    #         try:
+    #             tmp_flavors = api.nova.flavor_list(self.request)
+    #             flavors.extend(tmp_flavors)
+    #             full_flavors.update([(str(flavor.id), flavor)
+    #                                  for flavor in flavors])
+    #         except Exception:
+    #             exceptions.handle(self.request, ignore=True)
+
+    #     def _task_get_images():
+    #         # Gather our images to correlate our instances to them
+    #         try:
+    #             # TODO(gabriel): Handle pagination.
+    #             tmp_images = api.glance.image_list_detailed(self.request)[0]
+    #             images.extend(tmp_images)
+    #             image_map.update([(str(image.id), image) for image in images])
+    #         except Exception:
+    #             exceptions.handle(self.request, ignore=True)
+
+    #     with futurist.ThreadPoolExecutor(max_workers=3) as e:
+    #         e.submit(fn=_task_get_flavors)
+    #         e.submit(fn=_task_get_images)
+
+    #     non_api_filter_info = (
+    #         ('image_name', 'image', images),
+    #         ('flavor_name', 'flavor', flavors),
+    #     )
+    #     if not process_non_api_filters(search_opts, non_api_filter_info):
+    #         self._more = False
+    #         return []
+
+    #     _task_get_instances()
+
+    #     # Loop through instances to get flavor info.
+    #     for instance in instances:
+    #         if hasattr(instance, 'image'):
+    #             # Instance from image returns dict
+    #             if isinstance(instance.image, dict):
+    #                 if instance.image.get('id') in image_map:
+    #                     instance.image = image_map[instance.image.get('id')]
+    #                 # In case image not found in image_map, set name to empty
+    #                 # to avoid fallback API call to Glance in api/nova.py
+    #                 # until the call is deprecated in api itself
+    #                 else:
+    #                     instance.image['name'] = _("-")
+
+    #         flavor_id = instance.flavor["id"]
+    #         if flavor_id in full_flavors:
+    #             instance.full_flavor = full_flavors[flavor_id]
+    #         else:
+    #             # If the flavor_id is not in full_flavors list,
+    #             # put info in the log file.
+    #             msg = ('Unable to retrieve flavor "%s" for instance "%s".'
+    #                    % (flavor_id, instance.id))
+    #             LOG.info(msg)
+
+    #     return instances
 
 def process_non_api_filters(search_opts, non_api_filter_info):
     """Process filters by non-API fields
