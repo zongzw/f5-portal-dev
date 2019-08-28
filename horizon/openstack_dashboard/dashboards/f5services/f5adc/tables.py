@@ -1251,7 +1251,7 @@ def render_locked(instance):
 
 
 def get_server_detail_link(obj, request):
-    obj_id = obj.compute['vm_id'] if 'vm_id' in obj.compute else 'unknown'
+    obj_id = obj.management['vmId'] if 'vmId' in obj.management else 'unknown'
     return get_url_with_pagination(request,
                                 InstancesTable._meta.pagination_param,
                                 InstancesTable._meta.prev_pagination_param,

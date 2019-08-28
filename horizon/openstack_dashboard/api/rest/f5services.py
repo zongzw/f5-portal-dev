@@ -12,12 +12,10 @@ class ADC(generic.View):
     """API for retrieving ADCs"""
     url_regex = r'f5services/adcs/$'
 
-    # @rest_utils.ajax()
-    # def adc_list(self, request):
-    #     """Get a specific image
+    @rest_utils.ajax()
+    def post(self, request):
+        """Create ADC instance.
+        """
 
-    #     http://localhost/api/f5services/adcs/
-    #     """
-    #     adc_list = api.f5wafaas.adcs(request)
-    #     return adc_list
-    #     # return adc_list.to_dict(show_ext_attrs=True)
+        rlt = api.f5wafaas.adc_create(request)
+        return rest_utils.CreatedResponse('/api/f5services/adcs/%s' % rlt['id'], rlt)

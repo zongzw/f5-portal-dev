@@ -39,6 +39,7 @@ def adc_list(request):
 
     response = requests.get(url, headers=headers)
     if response.status_code != 200: 
+        # TODO: use horizon exceptions.handle()..
         raise Exception('Failed to request: %s' % response.reason)
     
     rlt = []
@@ -51,8 +52,51 @@ def adc_list(request):
 
 @profiler.trace
 def adc_create(request):
-    pass
+
+    def net2json(request):
+        rlt = {}
+        for (k, v) in request.DATA['networkSettings'].items(): 
+            for n in range(0, len(v)):
+                rlt['%s%d' % (k, n)] = {
+                    'type': k,
+                    'networkId': v[n]['id'],
+                }
+        return rlt
+
+    url = '%s/adcaas/v1/adcs' % WAFAAS_URL
+    headers = {
+        'tenant-id': request.user.tenant_id, 
+        'x-auth-token': request.user.token.id,
+        'content-type': 'application/json'
+    }
+    json_data = {
+        'name': request.DATA['name'],
+        'description': 'should not be shorter than 1 characters.. why?!',
+        'type': 'VE',
+        'networks': net2json(request),
+        'compute': {
+            'imageRef': request.DATA['source'][0]['id'],
+            'flavorRef': request.DATA['flavor_id'],
+        }
+    }
+
+    response = requests.post(url, headers=headers, data=json.dumps(json_data))
+    if response.status_code != 200: 
+        # TODO: use horizon exceptions.handle()..
+        raise Exception('Failed to request: %s' % response.reason)
+    
+    return json.loads(response.content)['adc']
 
 @profiler.trace
 def adc_delete(request, obj_id):
-    pass
+    url = '%s/adcaas/v1/adcs/%s' % (WAFAAS_URL, obj_id)
+    headers = {
+        'tenant-id': request.user.tenant_id, 
+        'x-auth-token': request.user.token.id,
+        'content-type': 'application/json'
+    }
+
+    response = requests.delete(url, headers=headers)
+    if response.status_code != 204: 
+        # TODO: use horizon exceptions.handle()..
+        raise Exception('Failed to request: %s' % response.reason)

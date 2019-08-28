@@ -44,6 +44,7 @@
     'horizon.dashboard.f5services.workflow.launch-instance.boot-source-types',
     'horizon.framework.widgets.toast.service',
     'horizon.app.core.openstack-service-api.policy',
+    'horizon.app.core.openstack-service-api.f5services',
     'horizon.dashboard.f5services.workflow.launch-instance.step-policy'
   ];
 
@@ -88,6 +89,7 @@
     bootSourceTypes,
     toast,
     policy,
+    f5ServicesAPI,
     stepPolicy
   ) {
 
@@ -339,8 +341,9 @@
       // window.alert(JSON.stringify(finalSpec, null, 2));
       console.log(JSON.stringify(finalSpec));
 
-      return successMessage; 
+      // return successMessage; 
       // return novaAPI.createServer(finalSpec).then(successMessage);
+      return f5ServicesAPI.createADC(finalSpec).then(successMessage);
     }
 
     function successMessage() {
