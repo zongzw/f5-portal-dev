@@ -82,7 +82,7 @@ def is_deleting(instance):
 
 
 class DeleteInstance(policy.PolicyTargetMixin, tables.DeleteAction):
-    policy_rules = (("compute", "os_compute_api:servers:delete"),)
+    # policy_rules = (("compute", "os_compute_api:servers:delete"),)
     help_text = _("Deleted instances are not recoverable.")
 
     @staticmethod
@@ -102,13 +102,15 @@ class DeleteInstance(policy.PolicyTargetMixin, tables.DeleteAction):
         )
 
     def allowed(self, request, instance=None):
-        error_state = False
-        if instance:
-            error_state = (instance.status == 'ERROR')
-        return error_state or not is_deleting(instance)
+        # error_state = False
+        # if instance:
+        #     error_state = (instance.status == 'ERROR')
+        # return error_state or not is_deleting(instance)
+        return True
 
     def action(self, request, obj_id):
-        api.nova.server_delete(request, obj_id)
+        #api.nova.server_delete(request, obj_id)
+        api.f5wafaas.adc_delete(request, obj_id)
 
 
 class RebootInstance(policy.PolicyTargetMixin, tables.BatchAction):
@@ -1301,7 +1303,8 @@ class InstancesTable(tables.DataTable):
                            verbose_name=_("Status"),
                            status=True)
     lastErr = tables.Column('lastErr', 
-                            verbose_name=_('Last Error'))
+                            verbose_name=_('Last Error'),
+                            truncate=30)
     # locked = tables.Column(render_locked,
     #                        verbose_name="",
     #                        sortable=False)

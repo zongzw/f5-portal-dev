@@ -12,7 +12,7 @@ class ADCInstance(base.APIResourceWrapper):
 
     Returned by the novaclient.servers.get_mks_console method.
     """
-    _attrs = ['id', 'type', 'name', 'networks', 'compute', 'management', 'status', 'lastErr']
+    _attrs = ['id', 'type', 'name', 'networks', 'compute', 'management', 'status', 'lastErr', 'tenantId']
 
     def __init__(self, apiresource, request):
         super(ADCInstance, self).__init__(apiresource)
@@ -54,5 +54,5 @@ def adc_create(request):
     pass
 
 @profiler.trace
-def adc_delete(request):
+def adc_delete(request, obj_id):
     pass
