@@ -175,12 +175,12 @@ class IndexView(tables.DataTableView):
     def get_data(self):
         try:
             adcs = api.f5wafaas.adc_list(self.request)
-        except Exception:
+        except Exception as e:
             exceptions.handle(self.request,
                                 _('Unable to retrieve instances.'))
             # In case of exception when calling nova.server_list
             # don't call api.network
-            return
+            return []
         
         images = []
         image_map = {}

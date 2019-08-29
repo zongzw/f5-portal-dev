@@ -14,6 +14,7 @@
 
 
 import logging
+import json
 
 from django.conf import settings
 from django.core import urlresolvers
@@ -1005,13 +1006,15 @@ def get_ips(instance):
         }
     }
 
-    for (k, v) in instance.management['networks'].items():
-        net_type = instance.networks[k]['type']
-        ip_groups[net_type]['non_floating'].append({
-            'addr': "%s:%s" % (k, v['fixedIp']),
-        })
-
-    
+    try: 
+        for (k, v) in instance.management['networks'].items():
+            net_type = instance.networks[k]['type']
+            ip_groups[net_type]['non_floating'].append({
+                'addr': "%s:%s" % (k, v['fixedIp']),
+            })
+    except Exception: 
+        LOG.debug("Failed to retrieve quota information %s " % json.dumps(instance._apiresource))
+        
     # for ip_group, addresses in instance.addresses.items():
     #     ip_groups[ip_group] = {}
     #     ip_groups[ip_group]["floating"] = []
@@ -1251,7 +1254,12 @@ def render_locked(instance):
 
 
 def get_server_detail_link(obj, request):
-    obj_id = obj.management['vmId'] if 'vmId' in obj.management else 'unknown'
+    obj_id = 'unknown'
+    try:
+        obj_id = obj.management['vmId'] if 'vmId' in obj.management else 'unknown'
+    except Exception:
+        pass
+    
     return get_url_with_pagination(request,
                                 InstancesTable._meta.pagination_param,
                                 InstancesTable._meta.prev_pagination_param,

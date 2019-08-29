@@ -10,8 +10,10 @@
             "request": "launch",
             "env": {
                 "PYTHONDONTWRITEBYTECODE": "1",
-                "OS_AUTH_URL": "http://10.250.11.184:5000/v3",
-                "F5_WAFAAS_URL": "http://10.250.11.24:3000",
+                "OS_AUTH_URL": "http://10.250.13.69:5000/v3",
+                // "OS_AUTH_URL": "http://10.250.11.184:5000/v3",
+                // "F5_WAFAAS_URL": "http://10.250.11.24:3000",
+                "F5_WAFAAS_URL": "http://localhost:3000",
             },
             "pythonPath": "${config:python.pythonPath}",
             "program": "${workspaceFolder}/manage.py",
