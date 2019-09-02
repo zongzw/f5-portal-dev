@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import mimetypes
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -9,6 +10,10 @@ from horizon.utils import secret_key
 from openstack_dashboard.settings import HORIZON_CONFIG
 
 DEBUG = True
+
+
+mimetypes.add_type("image/svg+xml", ".svg", True) 
+mimetypes.add_type("image/svg+xml", ".svgz", True) 
 
 # This setting controls whether or not compression is enabled. Disabling
 # compression makes Horizon considerably slower, but makes it much easier
