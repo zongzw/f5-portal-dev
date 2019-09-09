@@ -18,13 +18,13 @@ mimetypes.add_type("image/svg+xml", ".svgz", True)
 # This setting controls whether or not compression is enabled. Disabling
 # compression makes Horizon considerably slower, but makes it much easier
 # to debug JS and CSS changes
-COMPRESS_ENABLED = True
+COMPRESS_ENABLED = False
 
 # This setting controls whether compression happens on the fly, or offline
 # with `python manage.py compress`
 # See https://django-compressor.readthedocs.io/en/latest/usage/#offline-compression
 # for more information
-COMPRESS_OFFLINE = True
+COMPRESS_OFFLINE = False
 
 # WEBROOT is the location relative to Webserver root
 # should end with a slash.
